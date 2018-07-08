@@ -1,0 +1,14 @@
+version:                                '3'
+services:
+    mysql:
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+            MYSQL_DATABASE:             'todolist'
+            MYSQL_USER:                 'todolist'
+            MYSQL_PASSWORD:             'todolist'
+
+
+    blackfire:
+        environment:
+          BLACKFIRE_SERVER_ID:          xxxxxxxxxx
+          BLACKFIRE_SERVER_TOKEN:       xxxxxxxxxx
