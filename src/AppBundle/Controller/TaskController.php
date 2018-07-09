@@ -85,6 +85,12 @@ class TaskController extends Controller
      */
     public function deleteTaskAction(Task $task)
     {
+        if ($this->getUser() !== $task->getUser()) {
+            $this->addFlash('error', 'Vous n\'avez pas les droits pour supprimer cette tâche.');
+
+            return $this->redirectToRoute('task_list');
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($task);
         $em->flush();
