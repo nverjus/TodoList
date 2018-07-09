@@ -40,6 +40,7 @@ db: vendor wait-for-db                                                          
 	$(EXEC) $(CONSOLE) doctrine:database:drop --force --if-exists
 	$(EXEC) $(CONSOLE) doctrine:database:create --if-not-exists
 	$(EXEC) $(CONSOLE) doctrine:schema:create
+	$(EXEC) $(CONSOLE) doctrine:fixtures:load -n
 
 # Internal rules
 
