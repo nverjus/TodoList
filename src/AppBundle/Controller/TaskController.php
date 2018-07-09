@@ -74,8 +74,11 @@ class TaskController extends Controller
     {
         $task->toggle(!$task->isDone());
         $this->getDoctrine()->getManager()->flush();
-
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        if ($task->isDone()) {
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        } elseif (!$task->isDone()) {
+            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non terminée.', $task->getTitle()));
+        }
 
         return $this->redirectToRoute('task_list');
     }
@@ -85,10 +88,8 @@ class TaskController extends Controller
      */
     public function deleteTaskAction(Task $task)
     {
-        if ($this->getUser() !== $task->getUser()) {
-            $this->addFlash('error', 'Vous n\'avez pas les droits pour supprimer cette tâche.');
-
-            return $this->redirectToRoute('task_list');
+        if (($this->getUser() !== $task->getUser()) && !('ROLE_ADMIN' === $this->getUser()->getRole() && null === $task->getUser())) {
+            throw $this->createAccessDeniedException('Access denied.');
         }
 
         $em = $this->getDoctrine()->getManager();
