@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @UniqueEntity("email")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Column(type="integer")
@@ -47,9 +47,9 @@ class User
     /**
      * @var array
      *
-     * @ORM\Column(name="roles", type="array")
+     * @ORM\Column(type="string", length=10)
      */
-    private $roles;
+    private $role;
 
     public function getId()
     {
@@ -100,6 +100,7 @@ class User
     public function __construct()
     {
         $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->role = 'ROLE_USER';
     }
 
     /**
@@ -134,5 +135,15 @@ class User
     public function getTasks()
     {
         return $this->tasks;
+    }
+
+    /**
+     * Get roles
+     *
+     * @return array
+     */
+    public function getRoles()
+    {
+        return array($this->role);
     }
 }

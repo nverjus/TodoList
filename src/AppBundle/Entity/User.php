@@ -47,9 +47,9 @@ class User implements UserInterface
     /**
      * @var array
      *
-     * @ORM\Column(name="roles", type="array")
+     * @ORM\Column(type="string", length=10)
      */
-    private $roles;
+    private $role;
 
     public function getId()
     {
@@ -100,7 +100,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->roles = array('ROLE_USER');
+        $this->role = 'ROLE_USER';
     }
 
     /**
@@ -138,26 +138,36 @@ class User implements UserInterface
     }
 
     /**
-     * Set roles
-     *
-     * @param array $roles
-     *
-     * @return User
-     */
-    public function setRoles($roles)
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
      * Get roles
      *
      * @return array
      */
     public function getRoles()
     {
-        return $this->roles;
+        return array($this->role);
+    }
+
+    /**
+     * Set role
+     *
+     * @param string $role
+     *
+     * @return User
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get role
+     *
+     * @return string
+     */
+    public function getRole()
+    {
+        return $this->role;
     }
 }
