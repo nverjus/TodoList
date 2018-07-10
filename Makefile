@@ -36,11 +36,19 @@ tty:                                                                            
 	$(EXEC) /bin/bash
 
 
-db: vendor wait-for-db                                                                           ## Reset the database and load fixtures
+db: vendor wait-for-db                                                                           ## Reset the database
 	$(EXEC) $(CONSOLE) doctrine:database:drop --force --if-exists
 	$(EXEC) $(CONSOLE) doctrine:database:create --if-not-exists
 	$(EXEC) $(CONSOLE) doctrine:schema:create
+
+fixtures: db																																								## Load the test fixtures in database
 	$(EXEC) $(CONSOLE) doctrine:fixtures:load -n
+
+tests: fixtures																																	## Run the tests
+	$(EXEC) vendor/bin/simple-phpunit
+
+coverage: fixtures																															## Run the tests and generate a coverage report
+	$(EXEC) vendor/bin/simple-phpunit --coverage-html coverage
 
 # Internal rules
 

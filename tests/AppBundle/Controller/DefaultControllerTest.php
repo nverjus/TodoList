@@ -6,13 +6,34 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testIndex()
+    private $client;
+
+    public function setUp()
     {
-        $client = static::createClient();
+        $this->client = static::createClient();
+    }
 
-        $crawler = $client->request('GET', '/');
+    public function testHomepasWithAnonymousUser()
+    {
+        $crawler = $this->client->request('GET', '/');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $crawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+    }
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Welcome to Symfony', $crawler->filter('#container h1')->text());
+    public function testHomepageWithAuthentifiedUser()
+    {
+        $crawler = $this->client->request('GET', '/', array(), array(), array(
+          'PHP_AUTH_USER' => 'admin',
+          'PHP_AUTH_PW'   => 'admin',
+        ));
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Bienvenue sur Todo List")')->count());
+    }
+
+    public function tearDown()
+    {
+        $this->client = null;
     }
 }
