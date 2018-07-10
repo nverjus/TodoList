@@ -41,13 +41,13 @@ db: vendor wait-for-db                                                          
 	$(EXEC) $(CONSOLE) doctrine:database:create --if-not-exists
 	$(EXEC) $(CONSOLE) doctrine:schema:create
 
-fixtures:																																								## Load the test fixtures in database
+fixtures: db																																								## Load the test fixtures in database
 	$(EXEC) $(CONSOLE) doctrine:fixtures:load -n
 
 tests: fixtures																																	## Run the tests
 	$(EXEC) vendor/bin/simple-phpunit
 
-coverage: fixtures																															## Run the tests and generate a coverage report	
+coverage: fixtures																															## Run the tests and generate a coverage report
 	$(EXEC) vendor/bin/simple-phpunit --coverage-html coverage
 
 # Internal rules
