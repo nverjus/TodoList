@@ -6,7 +6,10 @@ RUN apt-get update \
     build-essential locales acl mailutils wget zip unzip \
     gnupg gnupg1 gnupg2
 
-RUN docker-php-ext-install pdo pdo_mysql opcache intl
+RUN docker-php-ext-install pdo pdo_mysql opcache intl zip
+
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 COPY php.ini /etc/php/7.0/php.ini
 COPY php-fpm-pool.conf /etc/php/7.0/pool.d/www.conf
