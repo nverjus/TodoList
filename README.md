@@ -33,8 +33,8 @@ Tests accounts :
 
 #### Clone the project
 
-    $ git clone git@github.com:nverjus/BileMo-API.git
-    $ cd BileMo-API
+    $ git clone git@github.com:nverjus/TodoList.git
+    $ cd TodoList
 
 #### Configuration
 
