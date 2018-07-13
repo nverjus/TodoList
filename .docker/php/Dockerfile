@@ -1,4 +1,4 @@
-FROM php:7.0-fpm
+FROM php:7.2-fpm
 
 ##<romaricp>##
 RUN apt-get update \
@@ -11,8 +11,8 @@ RUN docker-php-ext-install pdo pdo_mysql opcache intl zip
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
-COPY php.ini /etc/php/7.0/php.ini
-COPY php-fpm-pool.conf /etc/php/7.0/pool.d/www.conf
+COPY php.ini /etc/php/7.2/php.ini
+COPY php-fpm-pool.conf /etc/php/7.2/pool.d/www.conf
 
 RUN curl -sSk https://getcomposer.org/installer | php -- --disable-tls && \
 	mv composer.phar /usr/local/bin/composer

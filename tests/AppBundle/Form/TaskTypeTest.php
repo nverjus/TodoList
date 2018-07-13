@@ -28,7 +28,8 @@ class TaskTypeTest extends FormIntegrationTestCase
 
         $this->assertTrue($form->isSynchronized());
 
-        $this->assertEquals($object, $objectToCompare);
+        $this->assertEquals($object->getTitle(), $objectToCompare->getTitle());
+        $this->assertEquals($object->getContent(), $objectToCompare->getContent());
 
         $view = $form->createView();
         $children = $view->children;
