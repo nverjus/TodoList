@@ -6,7 +6,7 @@ This project use Git, to install and discover it, go to [the official website](h
 
 2.  Get the code of your fork locally
 
-3.  Install the project by following the install instructions in README.md
+3.  Install the project by following the install instructions in [README.md](https://github.com/nverjus/TodoList/blob/master/README.md)
 
 4.  Create a new branch with the name of the bug/functionnality you're working on and comment on the corresponding issue that you are working on it.
 
