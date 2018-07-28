@@ -10,8 +10,8 @@ This project use Git, to install and discover it, go to [the official website](h
 
 4.  Create a new branch with the name of the bug/functionnality you're working on and comment on the corresponding issue that you are working on it.
 
-5.  Write a set of tests that proove that your code is working.
+5.  Write a set of tests that show that your code is working.
 
-6.  Once your work is done;, push the code on your fork.
+6.  Once your work is done, push the code on your fork.
 
 7.  Finally, create a Pull Request to propose your edition to the main repository.
