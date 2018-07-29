@@ -50,12 +50,14 @@ class UserController extends Controller
      */
     public function editAction(User $user, Request $request)
     {
+        $oldPassword = $user->getPassword();
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
+            null === $user->getPassword() ? $password = $oldPassword : $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
+
             $user->setPassword($password);
 
             $this->getDoctrine()->getManager()->flush();
