@@ -120,6 +120,25 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter('html:contains(" Les deux mots de passe doivent correspondre.")')->count());
     }
 
+    public function testUserCreateWithAlreadyUsedMail()
+    {
+        $crawler = $this->client->request('GET', '/users/create', array(), array(), array(
+          'PHP_AUTH_USER' => 'admin',
+          'PHP_AUTH_PW'   => 'admin',
+        ));
+
+        $form = $crawler->filter('button[type="submit"]')->form();
+
+        $form['user[username]'] = 'User Test';
+        $form['user[password][first]'] = 'test';
+        $form['user[password][second]'] = 'test';
+        $form['user[email]'] = 'user1@mail.com';
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertEquals(1, $crawler->filter('html:contains("This value is already used.")')->count());
+    }
+
     public function testUserCreateWithGoodValue()
     {
         $crawler = $this->client->request('GET', '/users/create', array(), array(), array(
