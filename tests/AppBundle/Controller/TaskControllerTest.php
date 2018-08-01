@@ -163,8 +163,10 @@ class TaskControllerTest extends WebTestCase
 
     public function testAdminDeleteAnAnonymousTask()
     {
-        $this->logIn();
-        $crawler = $this->client->request('GET', '/tasks/4/delete');
+        $crawler = $this->client->request('GET', '/tasks/4/delete', array(), array(), array(
+          'PHP_AUTH_USER' => 'admin',
+          'PHP_AUTH_PW'   => 'admin',
+        ));
 
         $crawler = $this->client->followRedirect();
         $this->assertEquals(1, $crawler->filter('html:contains("La tâche a bien été supprimée.")')->count());

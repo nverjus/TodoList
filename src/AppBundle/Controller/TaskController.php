@@ -89,7 +89,7 @@ class TaskController extends Controller
      */
     public function deleteTaskAction(Task $task)
     {
-        if (($this->getUser() !== $task->getUser()) && !('ROLE_ADMIN' === $this->getUser()->getRole() && null === $task->getUser())) {
+        if (($this->getUser() !== $task->getUser())) {
             throw $this->createAccessDeniedException('Access denied.');
         }
 
