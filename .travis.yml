@@ -9,6 +9,7 @@ before-install:
   - composer self-update
 
 install:
+  - cp app/config/config_test.yml.travis app/config/config_test.yml
   - composer install
   - php bin/console doctrine:database:create --env=test
   - php bin/console doctrine:schema:create --env=test
