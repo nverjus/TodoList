@@ -2,6 +2,9 @@
 namespace  Tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class TaskControllerTest extends WebTestCase
 {
@@ -19,10 +22,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testTaskListPageIsUp()
     {
-        $crawler = $this->client->request('GET', '/tasks', array(), array(), array(
-          'PHP_AUTH_USER' => 'admin',
-          'PHP_AUTH_PW'   => 'admin',
-        ));
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/tasks');
         $this->assertEquals(1, $crawler->filter('a[href="/tasks/create"]')->count());
     }
 
@@ -51,10 +52,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testTaskCreateWithMissingFields()
     {
-        $crawler = $this->client->request('GET', '/tasks/create', array(), array(), array(
-          'PHP_AUTH_USER' => 'admin',
-          'PHP_AUTH_PW'   => 'admin',
-        ));
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/tasks/create');
 
         $form = $crawler->filter('button[type="submit"]')->form();
 
@@ -69,10 +68,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testTaskCreateWithGoodValues()
     {
-        $crawler = $this->client->request('GET', '/tasks/create', array(), array(), array(
-          'PHP_AUTH_USER' => 'admin',
-          'PHP_AUTH_PW'   => 'admin',
-        ));
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/tasks/create');
 
         $form = $crawler->filter('button[type="submit"]')->form();
 
@@ -87,10 +84,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testTaskEditWithMissingFields()
     {
-        $crawler = $this->client->request('GET', '/tasks/2/edit', array(), array(), array(
-          'PHP_AUTH_USER' => 'admin',
-          'PHP_AUTH_PW'   => 'admin',
-        ));
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/tasks/2/edit');
 
         $form = $crawler->filter('button[type="submit"]')->form();
 
@@ -105,10 +100,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testTaskEditWithGoodValues()
     {
-        $crawler = $this->client->request('GET', '/tasks/2/edit', array(), array(), array(
-          'PHP_AUTH_USER' => 'admin',
-          'PHP_AUTH_PW'   => 'admin',
-        ));
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/tasks/2/edit');
 
         $form = $crawler->filter('button[type="submit"]')->form();
 
@@ -124,26 +117,24 @@ class TaskControllerTest extends WebTestCase
 
     public function testTaskToogleToIsDone()
     {
-        $crawler = $this->client->request('GET', '/tasks', array(), array(), array(
-          'PHP_AUTH_USER' => 'admin',
-          'PHP_AUTH_PW'   => 'admin',
-        ));
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/tasks');
+
         $form = $crawler->filter('button[class="btn btn-success btn-sm pull-right"]')->first()->form();
         $crawler = $this->client->submit($form);
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
         $this->assertEquals(1, $crawler->filter('html:contains("La tâche First task of admin a bien été marquée comme faite.")')->count());
     }
 
     public function testTaskToogleToIsNotDone()
     {
-        $crawler = $this->client->request('GET', '/tasks', array(), array(), array(
-          'PHP_AUTH_USER' => 'admin',
-          'PHP_AUTH_PW'   => 'admin',
-        ));
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/tasks');
+
         $form = $crawler->filter('button[class="btn btn-success btn-sm pull-right"]')->first()->form();
         $crawler = $this->client->submit($form);
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
         $this->assertEquals(1, $crawler->filter('html:contains("La tâche First task of admin a bien été marquée comme non terminée.")')->count());
     }
@@ -154,6 +145,7 @@ class TaskControllerTest extends WebTestCase
           'PHP_AUTH_USER' => 'admin',
           'PHP_AUTH_PW'   => 'admin',
         ));
+
         $crawler = $this->client->followRedirect();
         $this->assertEquals(1, $crawler->filter('html:contains("La tâche a bien été supprimée.")')->count());
         $this->assertEquals(0, $crawler->filter('html:contains("First task of admin")')->count());
@@ -165,26 +157,40 @@ class TaskControllerTest extends WebTestCase
           'PHP_AUTH_USER' => 'admin',
           'PHP_AUTH_PW'   => 'admin',
         ));
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
 
-    public function testUserDeleteAnAnonymousTask()
-    {
-        $crawler = $this->client->request('GET', '/tasks/4/delete', array(), array(), array(
-          'PHP_AUTH_USER' => 'user1',
-          'PHP_AUTH_PW'   => 'user1',
-        ));
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminDeleteAnAnonymousTask()
     {
-        $crawler = $this->client->request('GET', '/tasks/4/delete', array(), array(), array(
-          'PHP_AUTH_USER' => 'admin',
-          'PHP_AUTH_PW'   => 'admin',
-        ));
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/tasks/4/delete');
+
         $crawler = $this->client->followRedirect();
         $this->assertEquals(1, $crawler->filter('html:contains("La tâche a bien été supprimée.")')->count());
         $this->assertEquals(0, $crawler->filter('html:contains("First task of anonymous user")')->count());
+    }
+
+    public function testUserDeleteAnAnonymousTask()
+    {
+        $crawler = $this->client->request('GET', '/tasks/3/delete', array(), array(), array(
+          'PHP_AUTH_USER' => 'user1',
+          'PHP_AUTH_PW'   => 'user1',
+        ));
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+    }
+
+    private function logIn()
+    {
+        $session = $this->client->getContainer()->get('session');
+
+        $firewallName = 'main';
+
+        $token = new UsernamePasswordToken('admin', 'admin', $firewallName, array('ROLE_ADMIN'));
+        $session->set('_security_'.$firewallName, serialize($token));
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 }

@@ -26,16 +26,16 @@ class TaskTypeTest extends FormIntegrationTestCase
 
         $form->submit($formData);
 
-        $this->assertTrue($form->isSynchronized());
+        self::assertTrue($form->isSynchronized());
 
-        $this->assertEquals($object->getTitle(), $objectToCompare->getTitle());
-        $this->assertEquals($object->getContent(), $objectToCompare->getContent());
+        self::assertEquals($object->getTitle(), $objectToCompare->getTitle());
+        self::assertEquals($object->getContent(), $objectToCompare->getContent());
 
         $view = $form->createView();
         $children = $view->children;
 
         foreach (array_keys($formData) as $key) {
-            $this->assertArrayHasKey($key, $children);
+            self::assertArrayHasKey($key, $children);
         }
     }
 

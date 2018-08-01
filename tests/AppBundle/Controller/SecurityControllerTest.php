@@ -2,6 +2,7 @@
 namespace Tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class SecurityControllerTest extends WebTestCase
 {
@@ -28,11 +29,11 @@ class SecurityControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $crawler->filter('a[href="/logout"]')->count());
+        self::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(1, $crawler->filter('a[href="/logout"]')->count());
     }
 
     public function testLoginWithInvalidCredentials()
@@ -46,11 +47,11 @@ class SecurityControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $crawler->filter('html:contains("Invalid credentials.")')->count());
+        self::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(1, $crawler->filter('html:contains("Invalid credentials.")')->count());
     }
 
     public function testLogout()
@@ -63,6 +64,6 @@ class SecurityControllerTest extends WebTestCase
         $link = $crawler->filter('a[href="/logout"]')->link();
         $crawler = $this->client->click($link);
 
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
     }
 }

@@ -9,37 +9,36 @@ class UserTest extends TestCase
 {
     public function testGetterAndSetter()
     {
-        $user = new User();
-        $this->assertNull($user->getId());
-        $this->assertNull($user->getSalt());
-
         $username = 'name';
-        $user->setUsername($username);
-        $this->assertSame($username, $user->getUsername());
-
         $password = 'pass';
-        $user->setPassword($password);
-        $this->assertSame($password, $user->getPassword());
-
         $email = 'mail';
-        $user->setEmail($email);
-        $this->assertSame($email, $user->getEmail());
-
         $role = 'ROLE';
+        $task1 = self::createMock(Task::class);
+        $task2 = self::createMock(Task::class);
+
+        $user = new User();
+        $user->setUsername($username);
+        $user->setPassword($password);
+        $user->setEmail($email);
         $user->setRole($role);
-        $this->assertSame($role, $user->getRole());
-        $this->assertSame(array($role), $user->getRoles());
 
-        $this->assertSame(0, $user->getTasks()->count());
+        self::assertNull($user->getId());
+        self::assertNull($user->getSalt());
 
-        $task1 = new Task();
-        $task2 = new Task();
+        self::assertSame($username, $user->getUsername());
+
+        self::assertSame($password, $user->getPassword());
+
+        self::assertSame($email, $user->getEmail());
+
+        self::assertSame($role, $user->getRole());
+        self::assertSame(array($role), $user->getRoles());
+
+        self::assertSame(0, $user->getTasks()->count());
         $user->addTask($task1);
         $user->addTask($task2);
-
-        $this->assertSame(2, $user->getTasks()->count());
-
+        self::assertSame(2, $user->getTasks()->count());
         $user->removeTask($task1);
-        $this->assertSame(1, $user->getTasks()->count());
+        self::assertSame(1, $user->getTasks()->count());
     }
 }

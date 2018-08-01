@@ -29,15 +29,15 @@ class UserTypeTest extends FormIntegrationTestCase
 
         $form->submit($formData);
 
-        $this->assertTrue($form->isSynchronized());
+        self::assertTrue($form->isSynchronized());
 
-        $this->assertEquals($object, $objectToCompare);
+        self::assertEquals($object, $objectToCompare);
 
         $view = $form->createView();
         $children = $view->children;
 
         foreach (array_keys($formData) as $key) {
-            $this->assertArrayHasKey($key, $children);
+            self::assertArrayHasKey($key, $children);
         }
     }
 

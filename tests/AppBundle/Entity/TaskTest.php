@@ -10,30 +10,28 @@ class TaskTest extends TestCase
     public function testGetterAndSetter()
     {
         $task = new Task();
-
-        $this->assertNull($task->getId());
-
-        $date = new \DateTime();
-        $task->setCreatedAt($date);
-        $this->assertSame($date, $task->getCreatedAt());
-
+        $date = self::createMock(\DateTime::class);
         $title = 'test';
-        $task->setTitle($title);
-        $this->assertSame($title, $task->getTitle());
-
         $content = 'test';
-        $task->setContent($content);
-        $this->assertSame($content, $task->getContent());
+        $user = self::createMock(User::class);
 
+        $task->setCreatedAt($date);
+        $task->setTitle($title);
+        $task->setContent($content);
         $task->setIsDone(true);
-        $this->assertTrue($task->isDone());
-        $this->assertTrue($task->getIsDone());
+        $task->setUser($user);
+
+        self::assertNull($task->getId());
+        self::assertSame($date, $task->getCreatedAt());
+        self::assertSame($title, $task->getTitle());
+
+        self::assertSame($content, $task->getContent());
+        self::assertTrue($task->isDone());
+        self::assertTrue($task->getIsDone());
 
         $task->toggle(!$task->isDone());
-        $this->assertFalse($task->isDone());
+        self::assertFalse($task->isDone());
 
-        $user = new User();
-        $task->setUser($user);
-        $this->assertSame($user, $task->getUser());
+        self::assertSame($user, $task->getUser());
     }
 }

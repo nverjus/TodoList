@@ -3,6 +3,9 @@
 namespace Tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class DefaultControllerTest extends WebTestCase
 {
@@ -16,24 +19,36 @@ class DefaultControllerTest extends WebTestCase
     public function testHomepasWithAnonymousUser()
     {
         $crawler = $this->client->request('GET', '/');
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        self::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
     }
 
     public function testHomepageWithAuthentifiedUser()
     {
-        $crawler = $this->client->request('GET', '/', array(), array(), array(
-          'PHP_AUTH_USER' => 'admin',
-          'PHP_AUTH_PW'   => 'admin',
-        ));
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Bienvenue sur Todo List")')->count());
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/');
+        self::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        self::assertGreaterThan(0, $crawler->filter('html:contains("Bienvenue sur Todo List")')->count());
     }
 
     public function tearDown()
     {
         $this->client = null;
+    }
+
+    private function logIn()
+    {
+        $session = $this->client->getContainer()->get('session');
+
+        $firewallName = 'main';
+
+        $token = new UsernamePasswordToken('admin', 'admin', $firewallName, array('ROLE_ADMIN'));
+        $session->set('_security_'.$firewallName, serialize($token));
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 }
