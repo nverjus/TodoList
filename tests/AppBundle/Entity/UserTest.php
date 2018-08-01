@@ -13,8 +13,8 @@ class UserTest extends TestCase
         $password = 'pass';
         $email = 'mail';
         $role = 'ROLE';
-        $task1 = self::createMock(Task::class);
-        $task2 = self::createMock(Task::class);
+        $task1 = static::createMock(Task::class);
+        $task2 = static::createMock(Task::class);
 
         $user = new User();
         $user->setUsername($username);
@@ -22,23 +22,23 @@ class UserTest extends TestCase
         $user->setEmail($email);
         $user->setRole($role);
 
-        self::assertNull($user->getId());
-        self::assertNull($user->getSalt());
+        static::assertNull($user->getId());
+        static::assertNull($user->getSalt());
 
-        self::assertSame($username, $user->getUsername());
+        static::assertSame($username, $user->getUsername());
 
-        self::assertSame($password, $user->getPassword());
+        static::assertSame($password, $user->getPassword());
 
-        self::assertSame($email, $user->getEmail());
+        static::assertSame($email, $user->getEmail());
 
-        self::assertSame($role, $user->getRole());
-        self::assertSame(array($role), $user->getRoles());
+        static::assertSame($role, $user->getRole());
+        static::assertSame(array($role), $user->getRoles());
 
-        self::assertSame(0, $user->getTasks()->count());
+        static::assertSame(0, $user->getTasks()->count());
         $user->addTask($task1);
         $user->addTask($task2);
-        self::assertSame(2, $user->getTasks()->count());
+        static::assertSame(2, $user->getTasks()->count());
         $user->removeTask($task1);
-        self::assertSame(1, $user->getTasks()->count());
+        static::assertSame(1, $user->getTasks()->count());
     }
 }

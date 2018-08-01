@@ -24,30 +24,30 @@ class TaskControllerTest extends WebTestCase
     {
         $this->logIn();
         $crawler = $this->client->request('GET', '/tasks');
-        $this->assertEquals(1, $crawler->filter('a[href="/tasks/create"]')->count());
+        static::assertEquals(1, $crawler->filter('a[href="/tasks/create"]')->count());
     }
 
     public function testTaskAtionsAreUnreachableForAnonymousUser()
     {
         $crawler = $this->client->request('GET', '/tasks');
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        static::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
 
         $crawler = $this->client->request('GET', '/tasks/1/toggle');
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        static::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
 
         $crawler = $this->client->request('GET', '/tasks/create');
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        static::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
 
         $crawler = $this->client->request('GET', '/tasks/1/edit');
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        static::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
 
         $crawler = $this->client->request('GET', '/tasks/1/delete');
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        static::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
     }
 
     public function testTaskCreateWithMissingFields()
@@ -62,8 +62,8 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        $this->assertEquals(1, $crawler->filter('html:contains("Vous devez saisir un titre.")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("Vous devez saisir du contenu.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir un titre.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir du contenu.")')->count());
     }
 
     public function testTaskCreateWithGoodValues()
@@ -79,7 +79,7 @@ class TaskControllerTest extends WebTestCase
         $crawler = $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
-        $this->assertEquals(1, $crawler->filter('html:contains("La tâche a été bien été ajoutée.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("La tâche a été bien été ajoutée.")')->count());
     }
 
     public function testTaskEditWithMissingFields()
@@ -94,8 +94,8 @@ class TaskControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        $this->assertEquals(1, $crawler->filter('html:contains("Vous devez saisir un titre.")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("Vous devez saisir du contenu.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir un titre.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir du contenu.")')->count());
     }
 
     public function testTaskEditWithGoodValues()
@@ -111,8 +111,8 @@ class TaskControllerTest extends WebTestCase
         $crawler = $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
-        $this->assertEquals(1, $crawler->filter('html:contains("La tâche a bien été modifiée.")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("test test")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("La tâche a bien été modifiée.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("test test")')->count());
     }
 
     public function testTaskToogleToIsDone()
@@ -122,9 +122,9 @@ class TaskControllerTest extends WebTestCase
 
         $form = $crawler->filter('button[class="btn btn-success btn-sm pull-right"]')->first()->form();
         $crawler = $this->client->submit($form);
-        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(1, $crawler->filter('html:contains("La tâche First task of admin a bien été marquée comme faite.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("La tâche First task of admin a bien été marquée comme faite.")')->count());
     }
 
     public function testTaskToogleToIsNotDone()
@@ -134,9 +134,9 @@ class TaskControllerTest extends WebTestCase
 
         $form = $crawler->filter('button[class="btn btn-success btn-sm pull-right"]')->first()->form();
         $crawler = $this->client->submit($form);
-        $this->assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(1, $crawler->filter('html:contains("La tâche First task of admin a bien été marquée comme non terminée.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("La tâche First task of admin a bien été marquée comme non terminée.")')->count());
     }
 
     public function testDeleteAnOwnedTask()
@@ -147,8 +147,8 @@ class TaskControllerTest extends WebTestCase
         ));
 
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(1, $crawler->filter('html:contains("La tâche a bien été supprimée.")')->count());
-        $this->assertEquals(0, $crawler->filter('html:contains("First task of admin")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("La tâche a bien été supprimée.")')->count());
+        static::assertEquals(0, $crawler->filter('html:contains("First task of admin")')->count());
     }
 
     public function testDeleteANotOwnedTask()
@@ -158,7 +158,7 @@ class TaskControllerTest extends WebTestCase
           'PHP_AUTH_PW'   => 'admin',
         ));
 
-        $this->assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminDeleteAnAnonymousTask()
@@ -169,8 +169,8 @@ class TaskControllerTest extends WebTestCase
         ));
 
         $crawler = $this->client->followRedirect();
-        $this->assertEquals(1, $crawler->filter('html:contains("La tâche a bien été supprimée.")')->count());
-        $this->assertEquals(0, $crawler->filter('html:contains("First task of anonymous user")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("La tâche a bien été supprimée.")')->count());
+        static::assertEquals(0, $crawler->filter('html:contains("First task of anonymous user")')->count());
     }
 
     public function testUserDeleteAnAnonymousTask()
@@ -179,7 +179,7 @@ class TaskControllerTest extends WebTestCase
           'PHP_AUTH_USER' => 'user1',
           'PHP_AUTH_PW'   => 'user1',
         ));
-        $this->assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
     private function logIn()

@@ -24,22 +24,22 @@ class UserControllerTest extends WebTestCase
     {
         $this->logIn();
         $crawler = $this->client->request('GET', '/users');
-        self::assertEquals(1, $crawler->filter('html:contains("Nom d\'utilisateur")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Nom d\'utilisateur")')->count());
     }
 
     public function testUsersAtionsAreUnreachableForAnonymousUser()
     {
         $crawler = $this->client->request('GET', '/users');
         $crawler = $this->client->followRedirect();
-        self::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        static::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
 
         $crawler = $this->client->request('GET', '/users/create');
         $crawler = $this->client->followRedirect();
-        self::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        static::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
 
         $crawler = $this->client->request('GET', '/users/1/edit');
         $crawler = $this->client->followRedirect();
-        self::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        static::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
     }
 
     public function testUsersAtionsAreUnreachableForNonAdminUser()
@@ -48,19 +48,19 @@ class UserControllerTest extends WebTestCase
           'PHP_AUTH_USER' => 'user1',
           'PHP_AUTH_PW'   => 'user1',
         ));
-        self::assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->request('GET', '/users/create', array(), array(), array(
           'PHP_AUTH_USER' => 'user1',
           'PHP_AUTH_PW'   => 'user1',
         ));
-        self::assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->request('GET', '/users/1/edit', array(), array(), array(
           'PHP_AUTH_USER' => 'user1',
           'PHP_AUTH_PW'   => 'user1',
         ));
-        self::assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
     }
 
     public function testUserCreateWithMissingFields()
@@ -77,8 +77,8 @@ class UserControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        self::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir un nom d\'utilisateur.")')->count());
-        self::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir une adresse email.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir un nom d\'utilisateur.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir une adresse email.")')->count());
     }
 
     public function testUserCreateWithInvalidEmail()
@@ -95,7 +95,7 @@ class UserControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        self::assertEquals(1, $crawler->filter('html:contains("Le format de l\'adresse n\'est pas correcte.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Le format de l\'adresse n\'est pas correcte.")')->count());
     }
 
     public function testUserCreateWithNotMatchingPassword()
@@ -112,7 +112,7 @@ class UserControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        self::assertEquals(1, $crawler->filter('html:contains(" Les deux mots de passe doivent correspondre.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains(" Les deux mots de passe doivent correspondre.")')->count());
     }
 
     public function testUserCreateWithAlreadyUsedMail()
@@ -129,7 +129,7 @@ class UserControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        self::assertEquals(1, $crawler->filter('html:contains("This value is already used.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("This value is already used.")')->count());
     }
 
     public function testUserCreateWithGoodValue()
@@ -147,8 +147,8 @@ class UserControllerTest extends WebTestCase
         $crawler = $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
-        self::assertEquals(1, $crawler->filter('html:contains("User Test")')->count());
-        self::assertEquals(1, $crawler->filter('html:contains("L\'utilisateur a bien été ajouté.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("User Test")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("L\'utilisateur a bien été ajouté.")')->count());
     }
 
     public function testUserEditWithMissingFields()
@@ -165,8 +165,8 @@ class UserControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        self::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir un nom d\'utilisateur.")')->count());
-        self::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir une adresse email.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir un nom d\'utilisateur.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Vous devez saisir une adresse email.")')->count());
     }
 
     public function testUserEditWithInvalidEmail()
@@ -183,7 +183,7 @@ class UserControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        self::assertEquals(1, $crawler->filter('html:contains("Le format de l\'adresse n\'est pas correcte.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("Le format de l\'adresse n\'est pas correcte.")')->count());
     }
 
     public function testUserEditWithNotMatchingPassword()
@@ -200,7 +200,7 @@ class UserControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        self::assertEquals(1, $crawler->filter('html:contains(" Les deux mots de passe doivent correspondre.")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains(" Les deux mots de passe doivent correspondre.")')->count());
     }
 
     public function testUserEditWithGoodValue()
@@ -218,8 +218,8 @@ class UserControllerTest extends WebTestCase
         $crawler = $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
-        self::assertEquals(1, $crawler->filter('html:contains("User Edited")')->count());
-        self::assertEquals(1, $crawler->filter('html:contains("L\'utilisateur a bien été modifié")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("User Edited")')->count());
+        static::assertEquals(1, $crawler->filter('html:contains("L\'utilisateur a bien été modifié")')->count());
     }
 
     private function logIn()

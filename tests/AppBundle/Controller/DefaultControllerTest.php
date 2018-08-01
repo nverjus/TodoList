@@ -19,18 +19,18 @@ class DefaultControllerTest extends WebTestCase
     public function testHomepasWithAnonymousUser()
     {
         $crawler = $this->client->request('GET', '/');
-        self::assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(Response::HTTP_FOUND, $this->client->getResponse()->getStatusCode());
         $crawler = $this->client->followRedirect();
-        self::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        self::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
+        static::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertEquals(1, $crawler->filter('form[action="/login_check"]')->count());
     }
 
     public function testHomepageWithAuthentifiedUser()
     {
         $this->logIn();
         $crawler = $this->client->request('GET', '/');
-        self::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        self::assertGreaterThan(0, $crawler->filter('html:contains("Bienvenue sur Todo List")')->count());
+        static::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertGreaterThan(0, $crawler->filter('html:contains("Bienvenue sur Todo List")')->count());
     }
 
     public function tearDown()

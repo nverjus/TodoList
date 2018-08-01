@@ -10,10 +10,10 @@ class TaskTest extends TestCase
     public function testGetterAndSetter()
     {
         $task = new Task();
-        $date = self::createMock(\DateTime::class);
+        $date = static::createMock(\DateTime::class);
         $title = 'test';
         $content = 'test';
-        $user = self::createMock(User::class);
+        $user = static::createMock(User::class);
 
         $task->setCreatedAt($date);
         $task->setTitle($title);
@@ -21,16 +21,16 @@ class TaskTest extends TestCase
         $task->setIsDone(true);
         $task->setUser($user);
 
-        self::assertNull($task->getId());
-        self::assertSame($date, $task->getCreatedAt());
-        self::assertSame($title, $task->getTitle());
+        static::assertNull($task->getId());
+        static::assertSame($date, $task->getCreatedAt());
+        static::assertSame($title, $task->getTitle());
 
-        self::assertSame($content, $task->getContent());
-        self::assertTrue($task->isDone());
+        static::assertSame($content, $task->getContent());
+        static::assertTrue($task->isDone());
 
         $task->toggle(!$task->isDone());
-        self::assertFalse($task->isDone());
+        static::assertFalse($task->isDone());
 
-        self::assertSame($user, $task->getUser());
+        static::assertSame($user, $task->getUser());
     }
 }
