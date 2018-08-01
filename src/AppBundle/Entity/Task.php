@@ -84,11 +84,6 @@ class Task
         $this->content = $content;
     }
 
-    public function isDone()
-    {
-        return $this->isDone;
-    }
-
     public function toggle($flag)
     {
         $this->isDone = $flag;
@@ -113,7 +108,7 @@ class Task
      *
      * @return boolean
      */
-    public function getIsDone()
+    public function isDone()
     {
         return $this->isDone;
     }

@@ -27,7 +27,6 @@ class TaskTest extends TestCase
 
         self::assertSame($content, $task->getContent());
         self::assertTrue($task->isDone());
-        self::assertTrue($task->getIsDone());
 
         $task->toggle(!$task->isDone());
         self::assertFalse($task->isDone());
