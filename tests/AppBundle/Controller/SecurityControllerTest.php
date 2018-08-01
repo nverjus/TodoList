@@ -13,7 +13,7 @@ class SecurityControllerTest extends WebTestCase
         $this->client = static::createClient();
     }
 
-    public function tearD()
+    public function tearDown()
     {
         $this->client = null;
     }
