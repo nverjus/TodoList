@@ -1,0 +1,24 @@
+language:         php
+php:
+  - '7.2'
+
+services:
+  - mysql
+
+before-install:
+  - composer self-update
+
+install:
+  - composer install
+  - php bin/console doctrine:database:create --env=test
+  - php bin/console doctrine:schema:create --env=test
+  - php bin/console doctrine:fixtures:load -n --env=test
+
+# Run script
+script:
+  - vendor/bin/simple-phpunit
+
+
+
+notifications:
+email:            false
