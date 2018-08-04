@@ -28,6 +28,12 @@ class UserFixtures extends Fixture
             'email' => 'user2@mail.com',
             'role' => 'ROLE_USER',
           ],
+          [
+            'username' => 'anonymous',
+            'password' => '$2y$13$HmzvrgMDQuYdvY3loBG/wODvVFwMlBf9GGIWWmPpl9DlRYLzIzJtW',
+            'email' => 'no mail',
+            'role' => 'ROLE_USER',
+          ],
         ];
 
         foreach ($users as $data) {

@@ -12,7 +12,6 @@ class TasksFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $users = $manager->getRepository(User::class)->findAll();
-        $admin = $manager->getRepository(User::class)->findOneByUsername('admin');
 
         foreach ($users as $user) {
             $task1 = new Task();
@@ -21,11 +20,6 @@ class TasksFixtures extends Fixture implements DependentFixtureInterface
             $task1->setUser($user);
             $manager->persist($task1);
         }
-        $anonTask1 = new Task();
-        $anonTask1->setTitle('First task of anonymous user');
-        $anonTask1->setContent('First task of anonymous user');
-        $anonTask1->setUser($admin);
-        $manager->persist($anonTask1);
 
         foreach ($users as $user) {
             $task2 = new Task();
@@ -34,11 +28,7 @@ class TasksFixtures extends Fixture implements DependentFixtureInterface
             $task2->setUser($user);
             $manager->persist($task2);
         }
-        $anonTask2 = new Task();
-        $anonTask2->setTitle('Second task of anonymous user');
-        $anonTask2->setContent('Second task of anonymous user');
-        $anonTask2->setUser($admin);
-        $manager->persist($anonTask2);
+
 
 
         $manager->flush();

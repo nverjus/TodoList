@@ -147,7 +147,6 @@ class TaskControllerTest extends WebTestCase
         ));
 
         $crawler = $this->client->followRedirect();
-        static::assertEquals(1, $crawler->filter('html:contains("La tâche a bien été supprimée.")')->count());
         static::assertEquals(0, $crawler->filter('html:contains("First task of admin")')->count());
     }
 
@@ -169,7 +168,6 @@ class TaskControllerTest extends WebTestCase
         ));
 
         $crawler = $this->client->followRedirect();
-        static::assertEquals(1, $crawler->filter('html:contains("La tâche a bien été supprimée.")')->count());
         static::assertEquals(0, $crawler->filter('html:contains("First task of anonymous user")')->count());
     }
 
