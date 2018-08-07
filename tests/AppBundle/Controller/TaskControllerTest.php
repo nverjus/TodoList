@@ -5,6 +5,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use AppBundle\Entity\User;
 
 class TaskControllerTest extends WebTestCase
 {
@@ -68,9 +69,10 @@ class TaskControllerTest extends WebTestCase
 
     public function testTaskCreateWithGoodValues()
     {
-        $this->logIn();
-        $crawler = $this->client->request('GET', '/tasks/create');
-
+        $crawler = $this->client->request('GET', '/tasks/create', array(), array(), array(
+          'PHP_AUTH_USER' => 'admin',
+          'PHP_AUTH_PW'   => 'admin',
+        ));
         $form = $crawler->filter('button[type="submit"]')->form();
 
         $form['task[title]'] = 'test test';

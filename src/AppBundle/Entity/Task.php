@@ -120,12 +120,11 @@ class Task
      *
      * @return Task
      */
-    public function setUser(\AppBundle\Entity\User $user = null)
+    public function setUser(\AppBundle\Entity\User $user)
     {
         $this->user = $user;
-        if (null !== $user) {
-            $this->user->addTask($this);
-        }
+        
+        $this->user->addTask($this);
 
         return $this;
     }
